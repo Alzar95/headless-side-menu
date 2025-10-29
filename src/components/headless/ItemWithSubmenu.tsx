@@ -3,7 +3,7 @@ import type {FC} from 'react';
 import type {ItemWithSubmenuProps} from '../../utils/types/menu';
 import {MenuContext} from './HeadlessMenu';
 
-const ItemWithSubmenu: FC<ItemWithSubmenuProps> = ({id, children, trigger, defaultActiveChild}) => {
+const ItemWithSubmenu: FC<ItemWithSubmenuProps> = ({id, children, trigger, defaultActiveChild, drawerTitle}) => {
     const context = useContext(MenuContext);
 
     if (!context) {
@@ -91,9 +91,9 @@ const ItemWithSubmenu: FC<ItemWithSubmenuProps> = ({id, children, trigger, defau
         );
 
         // Получаем заголовок
-        const drawerTitle = trigger({isExpanded, isActive}).props.children[1].props.children;
+        const valueDrawerTitle = drawerTitle ? drawerTitle : '';
 
-        openMobileDrawer?.(drawerContent, drawerTitle);
+        openMobileDrawer?.(drawerContent, valueDrawerTitle);
     };
 
     return (

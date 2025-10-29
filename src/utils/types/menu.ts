@@ -1,4 +1,4 @@
-import type {FC, ReactNode} from 'react';
+import type {ReactNode} from 'react';
 
 export interface MenuContextType {
     activeItem: string | null;
@@ -47,6 +47,7 @@ export interface ItemWithSubmenuProps {
     children: ReactNode;
     trigger: ReactNode | ((props: { isExpanded: boolean; isActive: boolean }) => ReactNode);
     defaultActiveChild?: string; // ID дочернего элемента по умолчанию
+    drawerTitle?: string;
 }
 
 export interface SubmenuProps {

@@ -58,9 +58,9 @@ const StyledMenuExample = () => {
                                 trigger={({isActive}) => (
                                     <div className={`p-3 rounded-full ${isActive ? 'bg-blue-500 text-white' : ''}`}>
                                         <span className="text-lg">📦</span>
-                                        <span className="hidden">Продукты</span>
                                     </div>
-                                )}>
+                                )}
+                                drawerTitle="Продукты">
                             <HeadlessMenu.Submenu position="bottom">
                                     <HeadlessMenu.Item id="products-product-1">
                                         {({isActive}) => (
@@ -179,8 +179,7 @@ const StyledMenuExample = () => {
                             </nav>
                             <HeadlessMenu.ToggleButton>
                                 {({isCollapsed, setIsCollapsed}) => (
-                                    <button className={`flex justify-center`}
-                                            onClick={setIsCollapsed}>
+                                    <button className={`flex justify-center`} onClick={() => setIsCollapsed ? setIsCollapsed(!isCollapsed) : null}>
                                         {isCollapsed ?
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                                  strokeWidth={1.5} stroke="currentColor" className="size-6">
