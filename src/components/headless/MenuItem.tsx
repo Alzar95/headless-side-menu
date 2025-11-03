@@ -28,16 +28,21 @@ const MenuItem: FC<MenuItemProps> = ({id, children}) => {
     const isActive = useMemo(() => {
         if (!activeItem) return false;
 
-        if (isCollapsed && parentId) {
-            // В свернутом состоянии для пунктов подменю:
-            // Активен только если нет активного обычного пункта
+        // Для обычных пунктов (не в подменю) - стандартная проверка
+        if (!parentId) {
+            return activeItem === id;
+        }
+
+        // Для пунктов в подменю:
+        if (isCollapsed || isMobile) {
+            // В свернутом/мобильном состоянии пункт подменю активен только если нет активного обычного пункта
             const hasActiveRegularItem = activeItem && !isSubmenuItem(activeItem);
             return activeItem === id && !hasActiveRegularItem;
         }
 
-        // В остальных случаях - стандартная проверка
+        // В развернутом состоянии - стандартная проверка
         return activeItem === id;
-    }, [activeItem, id, isCollapsed, parentId, isSubmenuItem]);
+    }, [activeItem, id, isCollapsed, parentId, isSubmenuItem, isMobile]);
 
     const handleClick = () => {
         setActiveItem(id);

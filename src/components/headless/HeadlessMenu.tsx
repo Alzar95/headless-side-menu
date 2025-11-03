@@ -25,7 +25,7 @@ const HeadlessMenu: HeadlessMenuComponent = ({
                                              }) => {
     const [activeItem, setActiveItem] = useState<string | null>(activeItemProps);
     const [isCollapsed, setIsCollapsed] = useState<boolean>(defaultCollapsed);
-    const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set());
+    const [expandedItem, setExpandedItem] = useState<string | null>(null);
     const [isMobile, setIsMobile] = useState<boolean>(false);
     const [activeSubmenuItems, setActiveSubmenuItemsState] = useState<Map<string, string>>(new Map());
 
@@ -45,12 +45,14 @@ const HeadlessMenu: HeadlessMenuComponent = ({
         return () => window.removeEventListener('resize', checkMobile);
     }, [mobileBreakpoint]);
 
-    // Закрываем подменю при сворачивании меню
+    // Эффект для сброса состояния подменю при изменении мобильного режима
     useEffect(() => {
-        if (isCollapsed) {
-            closeAllSubmenus();
+        closeAllSubmenus();
+
+        if (mobileDrawerOpen) {
+            closeMobileDrawer();
         }
-    }, [isCollapsed]);
+    }, [isMobile]);
 
     const handleSetActiveItem = (id: string) => {
         setActiveItem(id);
@@ -69,19 +71,18 @@ const HeadlessMenu: HeadlessMenuComponent = ({
     };
 
     const toggleExpanded = (id: string) => {
-        setExpandedItems(prev => {
-            const newSet = new Set(prev);
-            if (newSet.has(id)) {
-                newSet.delete(id);
-            } else {
-                newSet.add(id);
+        setExpandedItem(prev => {
+            // Если кликаем на уже открытое подменю - закрываем его
+            if (prev === id) {
+                return null;
             }
-            return newSet;
+            // Иначе открываем новое подменю (закрывая предыдущее)
+            return id;
         });
     };
 
     const closeAllSubmenus = () => {
-        setExpandedItems(new Set());
+        setExpandedItem(null);
     };
 
     const setActiveSubmenuItem = (parentId: string, childId: string) => {
@@ -126,7 +127,7 @@ const HeadlessMenu: HeadlessMenuComponent = ({
             setActiveItem: handleSetActiveItem,
             isCollapsed,
             setIsCollapsed: handleSetIsCollapsed,
-            expandedItems,
+            expandedItem,
             toggleExpanded,
             closeAllSubmenus,
             isMobile,

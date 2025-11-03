@@ -3,7 +3,7 @@ import type {ReactNode} from 'react';
 export interface MenuContextType {
     activeItem: string | null;
     setActiveItem: (id: string) => void;
-    expandedItems?: Set<string>;
+    expandedItem?: string | null;
     toggleExpanded?: (id: string) => void;
     closeAllSubmenus: () => void;
     isMobile?: boolean;
@@ -52,5 +52,4 @@ export interface ItemWithSubmenuProps {
 
 export interface SubmenuProps {
     children: ReactNode;
-    position?: 'right' | 'bottom'; // Позиция подменю
 }

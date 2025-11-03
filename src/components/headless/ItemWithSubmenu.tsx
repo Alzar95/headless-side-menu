@@ -11,7 +11,7 @@ const ItemWithSubmenu: FC<ItemWithSubmenuProps> = ({id, children, trigger, defau
     }
 
     const {
-        expandedItems,
+        expandedItem,
         toggleExpanded,
         activeItem,
         isCollapsed,
@@ -23,54 +23,46 @@ const ItemWithSubmenu: FC<ItemWithSubmenuProps> = ({id, children, trigger, defau
         openMobileDrawer,
     } = context;
 
-    const isExpanded = expandedItems?.has(id) || false;
+    const isExpanded = expandedItem === id;
     const activeChildId = activeSubmenuItems.get(id);
 
     // Определяем, активен ли этот пункт меню
     const isActive = useMemo(() => {
-        if (!isCollapsed) {
-            // В развернутом состоянии пункт с подменю никогда не активен
+        // В мобильном режиме или свернутом состоянии:
+        // MenuGroup активен, если у него есть активный дочерний элемент И нет активного обычного пункта
+        if (isMobile || isCollapsed) {
+            if (activeChildId) {
+                const hasActiveRegularItem = activeItem && !isSubmenuItem(activeItem);
+                return !hasActiveRegularItem;
+            }
             return false;
         }
 
-        // В свернутом состоянии пункт с подменю активен только если:
-        // 1. Есть активный дочерний элемент
-        // 2. Активный элемент НЕ является обычным пунктом меню
-        if (activeChildId) {
-            // Проверяем, не активен ли в это же время обычный пункт меню
-            const hasActiveRegularItem = activeItem && !isSubmenuItem(activeItem);
-            return !hasActiveRegularItem;
-        }
-
+        // В развернутом состоянии MenuGroup никогда не активен
         return false;
-    }, [isCollapsed, activeChildId, activeItem, isSubmenuItem]);
+    }, [isCollapsed, activeChildId, activeItem, isSubmenuItem, isMobile]);
 
     const handleTriggerClick = () => {
         if (isMobile) {
             handleMobileTriggerClick();
         } else {
-            if (isCollapsed) {
-                // В свернутом состоянии при клике активируем первый дочерний элемент
-                if (!activeChildId && defaultActiveChild) {
-                    setActiveSubmenuItem(id, defaultActiveChild);
-                    setActiveItem(defaultActiveChild);
-                } else if (activeChildId) {
-                    setActiveItem(activeChildId);
-                }
-                toggleExpanded?.(id);
-            } else {
-                // В развернутом состоянии при клике активируем первый дочерний элемент, если нет активного
-                if (!activeChildId && defaultActiveChild) {
-                    setActiveSubmenuItem(id, defaultActiveChild);
-                    setActiveItem(defaultActiveChild);
-                }
-                toggleExpanded?.(id);
+            // Общая логика для десктопа (свернутого и развернутого)
+            if (!activeChildId && defaultActiveChild) {
+                // Если нет активного дочернего элемента, устанавливаем первый
+                setActiveSubmenuItem(id, defaultActiveChild);
+                setActiveItem(defaultActiveChild);
+            } else if (activeChildId) {
+                // Если есть активный дочерний элемент, активируем его
+                setActiveItem(activeChildId);
             }
+
+            // Переключаем состояние подменю
+            toggleExpanded?.(id);
         }
     };
 
     const handleMouseEnter = () => {
-        if (isCollapsed && !isMobile) {
+        if (isCollapsed && !isMobile && !isExpanded) {
             toggleExpanded?.(id);
         }
     };
