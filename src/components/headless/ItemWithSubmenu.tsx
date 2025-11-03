@@ -56,7 +56,7 @@ const ItemWithSubmenu: FC<ItemWithSubmenuProps> = ({id, children, trigger, defau
                 if (!activeChildId && defaultActiveChild) {
                     setActiveSubmenuItem(id, defaultActiveChild);
                     setActiveItem(defaultActiveChild);
-                } else if (!isSubmenuItem(activeItem)) {
+                } else if (activeItem && activeChildId && !isSubmenuItem(activeItem)) {
                     setActiveItem(activeChildId);
                 }
                 toggleExpanded?.(id);
