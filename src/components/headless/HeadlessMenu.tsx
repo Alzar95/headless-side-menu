@@ -60,6 +60,10 @@ const HeadlessMenu: HeadlessMenuComponent = ({
         if (onItemClick) {
             onItemClick(id);
         }
+        // Если выбран обычный пункт (не подменю), сбрасываем активные подменю
+        if (!isSubmenuItem(id)) {
+            setActiveSubmenuItemsState(new Map());
+        }
         // Закрываем все подменю при выборе пункта
         if (isMobile) {
             closeAllSubmenus();

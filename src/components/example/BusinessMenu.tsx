@@ -22,18 +22,18 @@ const BusinessMenu = () => {
 
     return <Fragment>
         <AppMenu className="shadow-xl">
-            <AppMenu.Group label="Музыка" defaultActive={'/music/tracks'} icon={<MusicIcon />}>
-                <AppMenu.Item label="Треки" to="/music/tracks" />
-                <AppMenu.Item label="Альбомы" to="/music/albums" />
-                <AppMenu.Item label="Исполнители" to="/music/artists" />
+            <AppMenu.Group label="Музыка" defaultActive={'music-tracks'} icon={<MusicIcon />}>
+                <AppMenu.Item label="Треки" to="music-tracks" />
+                <AppMenu.Item label="Альбомы" to="music-albums" />
+                <AppMenu.Item label="Исполнители" to="music-artists" />
             </AppMenu.Group>
 
-            <AppMenu.Item label="Дашборд" to="/dashboard" icon={<DashboardIcon />} />
+            <AppMenu.Item label="Дашборд" to="dashboard" icon={<DashboardIcon />} />
 
-            <AppMenu.Group label="Продукты" defaultActive={'/products/1'} icon={<ProductsIcon />}>
-                <AppMenu.Item label="Продукт 1" to="/products/1" />
-                <AppMenu.Item label="Продукт 2" to="/products/2" />
-                <AppMenu.Item label="Продукт 3" to="/products/3" />
+            <AppMenu.Group label="Продукты" defaultActive={'products-1'} icon={<ProductsIcon />}>
+                <AppMenu.Item label="Продукт 1" to="products-1" />
+                <AppMenu.Item label="Продукт 2" to="products-2" />
+                <AppMenu.Item label="Продукт 3" to="products-3" />
             </AppMenu.Group>
         </AppMenu>
     </Fragment>

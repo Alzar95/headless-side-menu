@@ -29,35 +29,38 @@ const ItemWithSubmenu: FC<ItemWithSubmenuProps> = ({id, children, trigger, defau
     // Определяем, активен ли этот пункт меню
     const isActive = useMemo(() => {
         // В мобильном режиме или свернутом состоянии:
-        // MenuGroup активен, если у него есть активный дочерний элемент И нет активного обычного пункта
+        // MenuGroup активен, если у него есть активный дочерний элемент И этот дочерний элемент является текущим активным
         if (isMobile || isCollapsed) {
-            if (activeChildId) {
-                const hasActiveRegularItem = activeItem && !isSubmenuItem(activeItem);
-                return !hasActiveRegularItem;
-            }
-            return false;
+            return activeChildId !== undefined && activeChildId === activeItem;
         }
 
         // В развернутом состоянии MenuGroup никогда не активен
         return false;
-    }, [isCollapsed, activeChildId, activeItem, isSubmenuItem, isMobile]);
+    }, [isCollapsed, activeChildId, activeItem, isMobile]);
 
     const handleTriggerClick = () => {
         if (isMobile) {
             handleMobileTriggerClick();
         } else {
-            // Общая логика для десктопа (свернутого и развернутого)
-            if (!activeChildId && defaultActiveChild) {
-                // Если нет активного дочернего элемента, устанавливаем первый
-                setActiveSubmenuItem(id, defaultActiveChild);
-                setActiveItem(defaultActiveChild);
-            } else if (activeChildId) {
-                // Если есть активный дочерний элемент, активируем его
-                setActiveItem(activeChildId);
+            if (isCollapsed) {
+                // В свернутом состоянии при клике активируем первый дочерний элемент
+                if (!activeChildId && defaultActiveChild) {
+                    setActiveSubmenuItem(id, defaultActiveChild);
+                    setActiveItem(defaultActiveChild);
+                } else if (activeChildId) {
+                    setActiveItem(activeChildId);
+                }
+                toggleExpanded?.(id);
+            } else {
+                // В развернутом состоянии при клике активируем первый дочерний элемент, если нет активного
+                if (!activeChildId && defaultActiveChild) {
+                    setActiveSubmenuItem(id, defaultActiveChild);
+                    setActiveItem(defaultActiveChild);
+                } else if (!isSubmenuItem(activeItem)) {
+                    setActiveItem(activeChildId);
+                }
+                toggleExpanded?.(id);
             }
-
-            // Переключаем состояние подменю
-            toggleExpanded?.(id);
         }
     };
 

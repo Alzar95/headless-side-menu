@@ -52,8 +52,7 @@ const MenuItem: FC<MenuItemProps> = ({id, children}) => {
             setActiveSubmenuItem(parentId, id);
         }
 
-        // Закрываем все подменю при клике на пункт (опционально)
-        if (isCollapsed) {
+        if (isCollapsed || !parentId) {
             closeAllSubmenus();
         }
 
